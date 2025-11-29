@@ -1,9 +1,9 @@
-import { fetchImageValues } from "@/types";
+import { FetchImageValues } from "@/types";
 import { fetchImage } from "../fetchImage";
 
 interface MinorProjectPreviewProps{
     title:string;
-    bgImg:fetchImageValues;
+    bgImg:FetchImageValues;
 }
 
 const MinorProjectPreview=({title,bgImg}:MinorProjectPreviewProps)=>{
