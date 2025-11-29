@@ -166,7 +166,7 @@ const Button = forwardRef(
         }: PropsWithChildren<
             {
                 active: boolean
-                reversed: boolean
+                reversed?: boolean
                 onClick?: () => void
             }
             // & BaseProps
