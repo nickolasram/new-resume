@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  h2 {
+    font-size: xx-large;
+  }
+  h1 {
+    font-size: xx-large;
+  }
+  input[type='text'],
+  input[type='url']{
+    border: 1px solid black;
+    border-radius: 3px;
+    padding-left: 8px;
+    width: 40ch;
+    margin-bottom: 8px;
+  }
+  input[type='date'],
+  input[type='number']{
+    border: 1px solid black;
+    border-radius: 3px;
+    padding-left: 8px;
+    margin-bottom: 8px;
+  }
+  label{
+    display: block;
+    color: black;
+    font-weight: 600;
+  }
+  form{
+    background-color: rgb(244, 244, 244);
+  }
+  button.formBtn{
+    background-color: white;
+    padding-inline: 6px;
+    padding-block: 4px;
+    border-radius: 3px;
+    color: black;
+    border: 1px solid black;
+  }
+}
+
+.headerDescription{
+  animation: headerDescriptionAnimation;
+  animation-iteration-count: 1;
+  animation-delay: 1s;
+  animation-duration: 6s;
+  margin-top: 0;
+  height: 0;
+  opacity: 0;
+}
+
+@keyframes headerDescriptionAnimation{
+  0%{
+    margin-top: 0;
+    height: 0;
+    opacity: 0;
+  }
+  3%{
+    height: auto;
+    margin-top: 16px;
+    opacity: 1;
+  }
+  97%{
+    height: auto;
+    margin-top: 16px;
+    opacity: 1;
+  }
+  100%{
+    margin-top: 0;
+    height: 0;
+    opacity: 0;
+  }
+}
+
+.hoverIndicator{
+ animation:hoverIndicatorBlink;
+ animation-duration: 10s;
+ animation-iteration-count: infinite;
+ animation-delay: 7s;
+ opacity: 0;
+}
+
+@keyframes hoverIndicatorBlink{
+  0%{
+    opacity: 0.25;
+  }
+  10%{
+    opacity: 0.25;
+  }
+  15%{
+    opacity: 1;
+  }
+  35%{
+    opacity: 1;
+  }
+  40%{
+    opacity: 0.25;
+  }
+  100%{
+    opacity: 0.25;
+  }
+}
