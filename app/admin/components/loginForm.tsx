@@ -10,7 +10,7 @@ const LoginForm=({action}:{action:(formData:FormData)=>Promise<any>})=>{
                 loading: 'Attempting Login...',
                 success: "Successul Login",
                 // error: (err) => `Oops ${err}`
-                error: `Oops`
+                error: `Error`
             },
             {
                 style: {
