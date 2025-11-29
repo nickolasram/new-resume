@@ -11,7 +11,14 @@ const projectSchema = new mongoose.Schema({
     major: {type: Boolean, required: true},
     title: {type: String, required: true, unique: true},
     tags: {type: [String], required: true, default: []},
-    description: {type: String, required: true, default: ""},
+    description: {type: [mongoose.Schema.Types.Mixed], required: true, default: [
+        {
+            type: 'paragraph',
+            children: [
+                { text: "Default Text" }
+            ],
+        }
+    ]},
     lastUpdate: {type: Date, required: true, default: Date.now()},
     role: {type: String, required: true, default: 'Developer'},
     client: {type: String, required: true, default: 'Self'},

@@ -2,7 +2,7 @@
 import { useProjectContext } from "@/app/contexts/projectContext"
 import { ProjectTag,Status } from "@/types";
 import TextEditor from "./TextEditor";
-import {Dispatch, FormEvent, MouseEventHandler, SetStateAction, useState, useReducer, ChangeEvent, useEffect} from "react";
+import {Dispatch, FormEvent, MouseEventHandler, SetStateAction, useRef, useState, useReducer, ChangeEvent, useEffect} from "react";
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 
 
@@ -37,24 +37,44 @@ const ImageContainer=({image}:ImageContainerProps)=>{
                 </div>
             </div>
         </div>
-        
     )
 }
 
 const ProjectForm=()=>{
     const {project} = useProjectContext();
+    const [value, setValue] = useState();
     const [state, dispatch] = useReducer(
         (state: any, newState: any) => ({...state, ...newState}),
         {
             title: '',
-            role: ''
+            role: '',
+            client: '',
+            url:'',
+            github:'',
+            lastUpdate:new Date(),
+            order:99,
+            id:'',
+            hidden: true,
+            major: false,
+            status: Status.PreAlpha,
+            tags:[]
         }
     );
     useEffect(()=>{
         dispatch({
             title:project?project.title:'',
             role:project?project.role:'',
-        })
+            client:project?project.client:'',
+            url:project?.url?project.url:'',
+            github:project?.github?project.github:'',
+            lastUpdate:project?project.lastUpdate:new Date(),
+            order:project?project.order:99,
+            id:project?project._id:'',
+            hidden:project?project.hidden:'on',
+            major:project?project.major:false,
+            status:project?project.status:Status.PreAlpha,
+            tags:project?project.tags:[]
+        });
     }, [project]);
     const [open, setOpen] = useState(false)
     const tagValues = Object.values(ProjectTag);
@@ -63,7 +83,10 @@ const ProjectForm=()=>{
     async function handleSubmit(e:FormEvent<HTMLFormElement>){
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        formData.append("id", "692aba5b635cd1c643f047d2")
+        if(project){
+            formData.append("id", project._id as string)
+        }
+        formData.append("description", value!)
         try {
             const response = await fetch('/api/update', {
               method: 'POST',
@@ -82,6 +105,26 @@ const ProjectForm=()=>{
         const {name, value } = event.target;
         dispatch({ [name]: value });
     };
+    const handleOnCheck = (event:ChangeEvent<HTMLInputElement>) => {
+        const {name, value } = event.target;
+        if(state.name){
+            dispatch({ [name]: false });
+        } else {
+            dispatch({ [name]: value });
+        }
+    };
+    const handleOnRadio=(event:ChangeEvent<HTMLInputElement>)=>{
+        const {value}= event.target;
+        dispatch({ status: value });
+    };
+    const handleCheckTag=(event:ChangeEvent<HTMLInputElement>)=>{
+        const {name,value}=event.target;
+        if (state.tags.includes(value)){
+            dispatch({state: [...state.tags.filter((e:string)=>(e!=value))]})
+        } else {
+            dispatch({ state: [...state.tags, value] });
+        }
+    }
     return(
         <>
             <form onSubmit={handleSubmit} className="text-black w-fit p-3 flex items-stretch flex-col gap-8 lg:flex-row">
@@ -91,36 +134,36 @@ const ProjectForm=()=>{
                     <label htmlFor='role'>Project Role</label>
                     <input type="text" name="role" required={true} value={state.role} onChange={handleOnChange}/>
                     <label htmlFor='client'>Project Client</label>
-                    <input type="text" name="client" required={true}/>
+                    <input type="text" name="client" required={true} value={state.client} onChange={handleOnChange}/>
                     <label htmlFor={'url'}>
                         URL
                     </label>
-                    <input type={'url'} name={'url'} />
+                    <input type={'url'} name={'url'} value={state.url} onChange={handleOnChange} />
                     <label htmlFor={'github'}>
                         Github
                     </label>
-                    <input type={'url'} name={'github'} />
+                    <input type={'url'} name={'github'} value={state.github} onChange={handleOnChange} />
                     <div className="flex gap-2 w-[40ch] justify-between">
                         <div>
                             <label htmlFor='lastUpdate'>Last Update</label>
-                            <input type="date" name="lastUpdate"/>
+                            <input type="date" name="lastUpdate" value={state.lastUpdate} onChange={handleOnChange}/>
                         </div>
                         <div>
                             <label htmlFor='order'>Order</label>
-                            <input type="number" name="order" className="w-[60px]"/>
+                            <input type="number" name="order" className="w-[60px]" value={state.order} onChange={handleOnChange}/>
                         </div>
                         <div>
                             <label htmlFor='id'>ID</label>
-                            <input type="type" name="id" disabled/>
+                            <input type="type" name="id" className="text-ellipsis w-[50px]" disabled value={project?state.id:''}/>
                         </div>
                     </div>
                     <div className="flex gap-2">
                         <div className="flex gap-2 items-center mb-2">
-                            <input type="checkbox" name='major' value='major'/>
+                            <input type="checkbox" name='major' value='major' defaultChecked={state.major} onChange={handleOnCheck}/>
                             <label htmlFor="major">Major</label>
                         </div>
                         <div className="flex gap-2 items-center mb-2">
-                            <input type="checkbox" name='hidden' value='hidden'/>
+                            <input type="checkbox" name='hidden' value='hidden'  defaultChecked={state.hidden} onChange={handleOnCheck}/>
                             <label htmlFor="hidden">Hidden</label>
                         </div>
                     </div>
@@ -128,7 +171,7 @@ const ProjectForm=()=>{
                         <legend className="font-semibold text-gray-700">Status</legend>
                         { statusValues.map((projectStatus,i)=>(
                             <div className="flex gap-2 items-center" key={i}>
-                                <input required={true} type="radio" id={projectStatus} name="status" value={projectStatus} />
+                                <input checked={state.status == projectStatus} onChange={handleOnRadio} required={true} type="radio" id={projectStatus} name="status" value={projectStatus} />
                                 <label htmlFor={projectStatus}>{projectStatus}</label>
                             </div>
                         ))
@@ -139,15 +182,16 @@ const ProjectForm=()=>{
                     <div className='grid grid-cols-[repeat(3,1fr)] gap-2 mb-2'>
                         { tagValues.map((tag, i)=>(
                         <div className="flex gap-2 items-center" key={i}>
-                            <input type="checkbox" name="tags" value={tag}/>
+                            <input type="checkbox" name="tags" value={tag} checked={state.tags.includes(tag)} onChange={handleCheckTag}/>
                             <label htmlFor={tag}>{tag}</label>
                         </div>  
                         ))
                         }
                     </div>
                     <div className="bg-white mb-2">
-                        <TextEditor givenInitialValue="Given Initial Value" />
+                        <TextEditor givenInitialValue="Given Initial Value" setValue={setValue} />
                     </div>
+                    <button onClick={()=>{console.log(value)}}>log</button>
                 </div>
                 <div className="flex flex-col justify-between">
                     <div>

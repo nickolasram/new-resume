@@ -3,7 +3,7 @@
 import {BaseEditor, Descendant, Editor, Element as SlateElement, Transforms, Range} from "slate";
 import {ReactEditor, useSlate} from "slate-react";
 import {HistoryEditor} from "slate-history";
-import React, {forwardRef, PropsWithChildren, Ref} from "react";
+import React, {Dispatch, forwardRef, MutableRefObject, PropsWithChildren, Ref, SetStateAction} from "react";
 import isHotkey from 'is-hotkey'
 import { BaseRange, createEditor } from 'slate'
 import { Editable, RenderElementProps, RenderLeafProps, Slate, withReact,} from 'slate-react'
@@ -258,7 +258,6 @@ const toggleBlock = (editor: CustomEditor, format: CustomElementFormat) => {
             type: isActive ? format : isList ? 'list-item' : format,
         }
     }
-    console.log(newProperties)
     Transforms.setNodes<SlateElement>(editor, newProperties)
 
     if (!isActive && isList) {
@@ -360,7 +359,6 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
     if (isAlignElement(element)) {
         style.textAlign = element.align as AlignType
     }
-    console.log(element.type)
     switch (element.type) {
         case 'block-quote':
             return (
@@ -442,10 +440,11 @@ const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
 }
 
 interface ITextEditor {
-    givenInitialValue: string
+    givenInitialValue: string;
+    setValue: Dispatch<SetStateAction<any>>;
 }
 
-const TextEditor = ({givenInitialValue}: ITextEditor) => {
+const TextEditor = ({givenInitialValue, setValue}: ITextEditor) => {
     const renderElement = useCallback(
         (props: RenderElementProps) => <Element {...props} />,
         []
@@ -466,7 +465,17 @@ const TextEditor = ({givenInitialValue}: ITextEditor) => {
     ]
 
     return (
-        <Slate editor={editor} initialValue={initialValue}>
+        <Slate editor={editor} initialValue={initialValue}
+        onChange={value => {
+            const isAstChange = editor.operations.some(
+              op => 'set_selection' !== op.type
+            )
+            if (isAstChange) {
+              const content = JSON.stringify(value)
+              setValue(content)
+            }
+          }}
+        >
             <Toolbar>
                 <MarkButton format="bold">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">

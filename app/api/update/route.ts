@@ -12,6 +12,7 @@ export async function POST(req:NextRequest){
     } else {
         projectObject = new MongooseProject()
     }
+    console.log(formData.get('description'))
     const inputtedProject:Project = {
         title: formData.get('title') != '' ? formData.get('title') as string : 'Default Name',
         client: formData.get('client') != '' ? formData.get('client') as string : 'Default Client',
@@ -19,7 +20,7 @@ export async function POST(req:NextRequest){
         major: !!formData.get('major'),
         hidden: !!formData.get('hidden'),
         tags: formData.getAll('tags') ? formData.getAll('tags') as string[] : [],
-        description: 'default description',
+        description: formData.get('description') as unknown as {}[],
         lastUpdate: formData.get('lastUpdate') ? new Date(formData.get('lastUpdate') as string) : new Date(),
         order: formData.get("order") ? parseInt(formData.get("order") as string) : 99,
         images: [],

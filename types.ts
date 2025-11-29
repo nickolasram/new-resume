@@ -35,7 +35,7 @@ export interface Project{
     major: boolean;
     title:string;
     tags:string[];
-    description:string;
+    description:{}[];
     lastUpdate:Date;
     role:string;
     client:string;
