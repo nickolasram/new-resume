@@ -6,10 +6,10 @@ const Page=()=>{
     async function login(formData:FormData){
         "use server"
         const session = await getSession();
-        const encrypted1 = process.env.NEXT_PUBLIC_PW1
-        const encrypted2 = process.env.NEXT_PUBLIC_PW2
-        const firstCheck = await bcrypt.compare(formData.get("pw1"), encrypted1);
-        const secondCheck = await bcrypt.compare(formData.get("pw2"), encrypted2);
+        const encrypted1 = process.env.NEXT_PUBLIC_PW1 as string
+        const encrypted2 = process.env.NEXT_PUBLIC_PW2 as string
+        const firstCheck = await bcrypt.compare(formData.get("pw1") as string, encrypted1);
+        const secondCheck = await bcrypt.compare(formData.get("pw2") as string, encrypted2);
         if (!firstCheck || !secondCheck) {
             throw new Error("Invalid Credentials")
         }
