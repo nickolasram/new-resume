@@ -1,9 +1,9 @@
 import resume from '@/public/images/resume.png'
 import expo from '@/public/images/expo.jpg'
 import helper from '@/public/images/helper.png'
-import { fetchImageValues } from '@/types';
+import { FetchImageValues } from '@/types';
 
-export function fetchImage(input:fetchImageValues){
+export function fetchImage(input:FetchImageValues){
     switch (input){
         case 'helper main':
             return helper.src;
