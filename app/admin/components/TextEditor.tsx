@@ -440,7 +440,7 @@ const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
 }
 
 interface ITextEditor {
-    givenInitialValue: string;
+    givenInitialValue: string|Descendant[];
     setValue: Dispatch<SetStateAction<any>>;
 }
 
@@ -455,14 +455,20 @@ const TextEditor = ({givenInitialValue, setValue}: ITextEditor) => {
     )
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
-    const initialValue: Descendant[] = [
-        {
-            type: 'paragraph',
-            children: [
-                { text: givenInitialValue }
-            ],
-        }
-    ]
+    let initialValue: Descendant[];
+
+    if (typeof givenInitialValue == 'string') {
+        initialValue = [
+            {
+                type: 'paragraph',
+                children: [
+                    { text: givenInitialValue }
+                ],
+            }
+        ]
+    } else {
+        initialValue = givenInitialValue
+    }
 
     return (
         <Slate editor={editor} initialValue={initialValue}
@@ -581,7 +587,7 @@ const TextEditor = ({givenInitialValue, setValue}: ITextEditor) => {
                 placeholder="Enter some rich text…"
                 spellCheck
                 // autoFocus
-                className={'w-196.5 border-1 border-black pl-3 h-[10em] overflow-y-auto'}
+                className={'w-196.5 max-w-196.5 border-1 border-black pl-3 h-[10em] overflow-y-auto'}
                 onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
                     for (const hotkey in HOTKEYS) {
                         if (isHotkey(hotkey, event as never)) {

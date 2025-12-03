@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.943.0",
     "@headlessui/react": "^2.2.9",
     "bcrypt": "^6.0.0",
     "iron-session": "^8.0.4",
@@ -19,6 +20,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hot-toast": "^2.6.0",
+    "sanitize-filename": "^1.6.3",
     "slate": "^0.118.1",
     "slate-history": "^0.113.1",
     "slate-react": "^0.119.0"

@@ -19,7 +19,7 @@ const Page=()=>{
             <ProjectProvider>
                 <div className="w-[240px] border-r-2 border-white">
                     <h2>Projects</h2>
-                    <Suspense fallback={<p>Loading...</p>}>
+                    <Suspense fallback={<p className={'text-lg text-black'}>Loading...</p>}>
                         <ProjectPillar projectsPromise={projects} />
                     </Suspense>
                 </div>

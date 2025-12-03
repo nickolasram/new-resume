@@ -36,7 +36,6 @@ export interface Project{
     title:string;
     tags:string[];
     description:{}[];
-    lastUpdate:Date;
     role:string;
     client:string;
     images:ProjectImage[];
@@ -46,4 +45,5 @@ export interface Project{
     github?:string;
     hidden:boolean;
     _id?:string;
+    shortcut:string;
 }
