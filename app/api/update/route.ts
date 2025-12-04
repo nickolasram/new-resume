@@ -12,7 +12,6 @@ export async function POST(req:NextRequest){
             if(!image){
                 return NextResponse.json({error: "Image Error"}, {status:500, statusText:'No URL returned from S3'});
             }
-            console.log(image);
             const project = await MongooseProject.findById(body.id);
             const projectImages:ProjectImage[] = project['images'];
             const singleton = projectImages.length == 0;
@@ -65,8 +64,6 @@ export async function POST(req:NextRequest){
         for (const [key, value] of Object.entries(inputtedProject)){
             projectObject[key] = value;
         }
-        console.log(formData.get('status'));
-        console.log(Status[formData.get('status') as keyof typeof Status]);
         await projectObject.save();
         return NextResponse.json({success: true}, {status:200});
     }   catch (err) {

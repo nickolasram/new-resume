@@ -25,13 +25,13 @@ export default async function Home() {
                 Thank you for visiting this site where you&apos;ll find information about my background, projects, and goals as a developer.</p>
             <Suspense fallback={<p>Loading...</p>}>
                 <div className="grid grid-cols-[repeat(1,1fr)] md:grid-cols-[repeat(3,1fr)] md:h-auto w-full">
-                    {majorProjects.map((project, i) => {
+                    {majorProjects.sort((a,b)=>(a.order-b.order)).map((project, i) => {
                         return (
                             <MajorProjectContainer project={project} key={i}/>
                         )
                     })}
                     <div className="bg-blue-700 flex flex-col aspect-square w-full">
-                        {minorProjects.map((project, i) => {
+                        {minorProjects.sort((a,b)=>(a.order-b.order)).map((project, i) => {
                             return (
                                 <MinorProjectContainer project={project} key={i}/>
                             )

@@ -13,13 +13,29 @@ const ProjectPillar=(
     }, [])
     return(
         <div className="flex flex-col">
-            {projects.map((projectItem:any)=>{
+            <p>
+                Major
+            </p>
+            {projects.filter(obj=>(obj?.major)).sort((a,b)=>(a.order-b.order)).map((projectItem:Project)=>{
                 return (
                     <div
                         onClick={() => setProject(projectItem)}
                         key={projectItem._id}
-                        className={`hover:bg-gray-800 pl-2 py-3 border-b-[1px] border-[#888] cursor-pointer ${project == projectItem?'bg-gray-600':''}`}>
-                        <p className={''}>{projectItem.title}</p>
+                        className={`hover:bg-gray-800 pl-2 py-3 border-b-[1px] border-[#888] cursor-pointer ${project?._id == projectItem._id?'bg-gray-600':''}`}>
+                        <p className={''}>{projectItem.order}. {projectItem.title}</p>
+                    </div>
+                )
+            })}
+            <p>
+                Minor
+            </p>
+            {projects.filter(obj=>(!obj?.major)).sort((a,b)=>(a.order-b.order)).map((projectItem:Project)=>{
+                return (
+                    <div
+                        onClick={() => setProject(projectItem)}
+                        key={projectItem._id}
+                        className={`hover:bg-gray-800 pl-2 py-3 border-b-[1px] border-[#888] cursor-pointer ${project?._id == projectItem._id?'bg-gray-600':''}`}>
+                        <p className={''}>{projectItem.order}. {projectItem.title}</p>
                     </div>
                 )
             })}
