@@ -21,7 +21,10 @@ export enum ProjectTag{
     Dynamo="Dynamo DB",
     Lambda="Lambda",
     Kotlin="Kotlin",
-    Headless="HeadlessUI"
+    Headless="HeadlessUI",
+    Java="Java",
+    Desktop="Desktop",
+    Mobile="Mobile",
 }
 
 export interface ProjectImage{

@@ -112,6 +112,15 @@ const ProjectForm=()=>{
         });
         if (project){
             setValue(project?.description!)
+        } else {
+            setValue([
+                {
+                    type: 'paragraph',
+                    children: [
+                        { text: "Default Value" }
+                    ],
+                }
+            ])
         }
     }, [project]);
     const [open, setOpen] = useState(false)
@@ -208,12 +217,8 @@ const ProjectForm=()=>{
         dispatch({ [name]: value });
     };
     const handleOnCheck = (event:ChangeEvent<HTMLInputElement>) => {
-        const {name, value } = event.target;
-        if(state.name){
-            dispatch({ [name]: false });
-        } else {
-            dispatch({ [name]: value });
-        }
+        const {name} = event.target;
+        dispatch({ [name]: !state[name] });
     };
     const handleOnRadio=(event:ChangeEvent<HTMLInputElement>)=>{
         const {value}= event.target;
@@ -354,7 +359,7 @@ const ProjectForm=()=>{
                         ))
                         }
                     </div>
-                    <div className="bg-white mb-2">
+                    <div className="bg-white mb-2 max-w-196.5 w-196.5">
                         { loaded &&
                             <TextEditor key={state.id} givenInitialValue={project?project.description as Descendant[]:'Default Value'} setValue={setValue} />
                         }
@@ -406,6 +411,9 @@ const ProjectForm=()=>{
                         </div>
                     </div>
                     <div className="flex justify-end gap-2">
+                        <Button type="button" className={'formBtn text-2xl'}>
+                            Delete
+                        </Button>
                         <Button type="reset" className={'formBtn text-2xl'}>
                             Reset
                         </Button>

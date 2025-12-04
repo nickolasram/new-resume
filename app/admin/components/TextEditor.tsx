@@ -587,7 +587,7 @@ const TextEditor = ({givenInitialValue, setValue}: ITextEditor) => {
                 placeholder="Enter some rich text…"
                 spellCheck
                 // autoFocus
-                className={'w-196.5 max-w-196.5 border-1 border-black pl-3 h-[10em] overflow-y-auto'}
+                className={'w-[548px] max-w-[548px] text-wrap wrap-anywhere overflow-x-hidden border-1 border-black pl-3 h-[10em] overflow-y-auto'}
                 onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
                     for (const hotkey in HOTKEYS) {
                         if (isHotkey(hotkey, event as never)) {

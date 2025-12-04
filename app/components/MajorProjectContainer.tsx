@@ -1,39 +1,32 @@
-import { ReactNode } from 'react';
+import {Project} from "@/types";
 
-interface MajorProjectItemProps{
-    title:string;
-    bgImg:string;
+interface MajorProjectContainerProps {
+    project: Project;
 }
 
-const MajorProjectItem=(
-    {
-        title,
-        bgImg
-    }: MajorProjectItemProps
-)=>(
-    <div
-    style={{
-        backgroundImage: bgImg?`url(${bgImg})`:'none'
-    }} 
-    className="p-3 flex bg-center bg-cover group flex-col [box-shadow:inset_0_0_10px_20px_#000] cursor-pointer transition-all hover:[box-shadow:inset_0_0_5px_10px_#000] aspect-square w-full">
-        <div className="grow transition-all opacity-0 group-hover:opacity-100 group-hover:backdrop-brightness-50">
-            <h2>{title}</h2>
-        </div>
-        <div className="h-16 transition-all opacity-0 group-hover:opacity-100 group-hover:backdrop-brightness-50">
-            <p>ss</p>
-        </div>
-    </div>
-)
+const MajorProjectContainer = ({project}:MajorProjectContainerProps) => {
+    let bgImg;
+    if (project.images.length == 0) {
+        bgImg = process.env.NEXT_PUBLIC_AWS_DEFAULT;
+    } else {
+        const image = project.images.find(obj=>{return obj.bg})
+        bgImg = image?.url
+    }
 
-interface MajorProjectContainerProps{
-    children: ReactNode;
+    return (
+        <div
+            style={{
+                backgroundImage: `url(${bgImg})`
+            }}
+            className="p-3 flex bg-center bg-cover group flex-col [box-shadow:inset_0_0_10px_20px_#000] cursor-pointer transition-all hover:[box-shadow:inset_0_0_5px_10px_#000] aspect-square w-full">
+            <div className="grow transition-all opacity-0 group-hover:opacity-100 group-hover:backdrop-brightness-50">
+                <h2>{project.title}</h2>
+            </div>
+            <div className="h-16 transition-all opacity-0 group-hover:opacity-100 group-hover:backdrop-brightness-50">
+                <p>ss</p>
+            </div>
+        </div>
+    )
 }
-
-const MajorProjectContainer=({children}:MajorProjectContainerProps)=>(
-    <div className="grid grid-cols-[repeat(1,1fr)] md:grid-cols-[repeat(3,1fr)] md:h-auto w-full">
-        {children}
-        {/*<MajorProjectItem title="Seattle Colleges" bgImg={helper.src}/> */}
-    </div>
-)
 
 export default MajorProjectContainer;

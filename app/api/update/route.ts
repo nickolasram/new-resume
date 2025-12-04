@@ -43,6 +43,7 @@ export async function POST(req:NextRequest){
         if (typeof parsedDescription[0] == 'string'){
             parsedDescription = JSON.parse(parsedDescription)
         }
+        const statusFiltered = formData.get('status') == 'Pre-alpha'?'PreAlpha':formData.get('status');
         const inputtedProject:Project = {
             title: formData.get('title') != '' ? formData.get('title') as string : 'Default Name',
             client: formData.get('client') != '' ? formData.get('client') as string : 'Default Client',
@@ -56,7 +57,7 @@ export async function POST(req:NextRequest){
                     JSON.parse(entry as string)
                 )
             ),
-            status: Status[formData.get('status') as keyof typeof Status],
+            status: Status[statusFiltered as keyof typeof Status],
             url: formData.get('url') ? formData.get('url') as string : undefined,
             github: formData.get('github') ? formData.get('github') as string : undefined,
             shortcut: formData.get('shortcut') as string,
@@ -64,6 +65,8 @@ export async function POST(req:NextRequest){
         for (const [key, value] of Object.entries(inputtedProject)){
             projectObject[key] = value;
         }
+        console.log(formData.get('status'));
+        console.log(Status[formData.get('status') as keyof typeof Status]);
         await projectObject.save();
         return NextResponse.json({success: true}, {status:200});
     }   catch (err) {
