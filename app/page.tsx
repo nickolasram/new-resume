@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import MajorProjectContainer from "./components/MajorProjectContainer";
 import MinorProjectContainer from "./components/MinorProjectContainer";
 import {Project} from "@/models/project";
@@ -6,7 +8,7 @@ import {Suspense} from "react";
 import StaticNavbar from "@/app/components/staticNavbar";
 
 export default async function Home() {
-    const projectsPromise = Project.find({}, {__v: 0}).lean().then(e => {
+    const projects = await Project.find({}, {__v: 0}).lean().then(e => {
         return e.map(obj => {
             return ({
                 ...obj,
@@ -14,7 +16,6 @@ export default async function Home() {
             })
         }) as unknown as ProjectType[];
     })
-    const projects = await projectsPromise;
     const majorProjects = projects.filter(obj => (obj.major))
     const minorProjects = projects.filter(obj => (!obj.major))
     return (
