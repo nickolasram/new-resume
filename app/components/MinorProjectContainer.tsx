@@ -1,5 +1,4 @@
 import {Project} from "@/types";
-import {fetchImage} from "@/app/fetchImage";
 
 interface MinorProjectContainerProps{
     project:Project;
