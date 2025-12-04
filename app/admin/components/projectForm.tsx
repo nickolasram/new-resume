@@ -70,7 +70,11 @@ const ImageContainer=({image, index}:ImageContainerProps)=>{
     )
 }
 
-const ProjectForm=()=>{
+interface ProjectFormProps {
+    revalidateFunction:()=>void;
+}
+
+const ProjectForm=({revalidateFunction}:ProjectFormProps)=>{
     const {project, setProject} = useProjectContext();
     const [value, setValue] = useState<{}[]>([]);
     const [loaded, setLoaded] = useState(false);
@@ -175,6 +179,7 @@ const ProjectForm=()=>{
           body: formData
         }).then(async res=>{
             if(res.ok){
+                revalidateFunction();
                 const updateProjectContext = await fetch('api/project?shortcut='+updatedShortcut)
                     .then(async res2 => {
                         if (res2.ok) {

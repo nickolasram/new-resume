@@ -4,6 +4,7 @@ import ProjectForm from "../components/projectForm"
 import {Project} from "@/models/project";
 import {Suspense} from "react";
 import {Project as ProjectType} from "@/types";
+import { revalidatePath } from 'next/cache'
 
 const Page=()=>{
     const projects = Project.find({},{__v:0}).lean().then(e => {
@@ -14,6 +15,10 @@ const Page=()=>{
             })
         }) as unknown as ProjectType[];
     })
+    const revalidateFunction=async ()=>{
+        "use server"
+        revalidatePath('/admin', 'page')
+    }
     return(
         <div className="flex w-full">
             <ProjectProvider>
@@ -24,7 +29,7 @@ const Page=()=>{
                     </Suspense>
                 </div>
                 <div className="grow pl-4">
-                    <ProjectForm />
+                    <ProjectForm revalidateFunction={revalidateFunction} />
                 </div>
             </ProjectProvider>
         </div>
