@@ -1,3 +1,21 @@
+// "use client"
+// import React, { useMemo } from 'react'
+// import { createEditor, Descendant } from 'slate'
+// import { Slate, Editable, withReact } from 'slate-react'
+//
+// const SlateTextArea = ({value}:{value:Descendant[]}) => {
+//     const editor = useMemo(() => withReact(createEditor()), [])
+//     return (
+//         <Slate editor={editor} initialValue={value}>
+//             <Editable
+//                 className="bg-white text-black"
+//                 readOnly
+//                 placeholder="Enter some plain text..." />
+//         </Slate>
+//     )
+// }
+//
+// export default SlateTextArea
 "use client"
 
 import {BaseEditor, Descendant, Editor, Element as SlateElement, Transforms, Range} from "slate";
@@ -440,11 +458,12 @@ const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
 }
 
 interface ITextEditor {
-    givenInitialValue: string|Descendant[];
-    setValue: Dispatch<SetStateAction<any>>;
+    value: Descendant[];
+    areaColor: string;
+    textColor: string;
 }
 
-const TextEditor = ({givenInitialValue, setValue}: ITextEditor) => {
+const SlateTextEditor = ({value, areaColor, textColor}: ITextEditor) => {
     const renderElement = useCallback(
         (props: RenderElementProps) => <Element {...props} />,
         []
@@ -455,151 +474,22 @@ const TextEditor = ({givenInitialValue, setValue}: ITextEditor) => {
     )
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
-    let initialValue: Descendant[];
-
-    if (typeof givenInitialValue == 'string') {
-        initialValue = [
-            {
-                type: 'paragraph',
-                children: [
-                    { text: givenInitialValue }
-                ],
-            }
-        ]
-    } else {
-        initialValue = givenInitialValue
-    }
-
     return (
-        <Slate editor={editor} initialValue={initialValue}
-        onChange={value => {
-            const isAstChange = editor.operations.some(
-              op => 'set_selection' !== op.type
-            )
-            if (isAstChange) {
-              const content = JSON.stringify(value)
-              setValue(content)
-            }
-          }}
-        >
-            <Toolbar>
-                <MarkButton format="bold">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <path fillRule="evenodd"
-                              d="M4 3a1 1 0 0 1 1-1h6a4.5 4.5 0 0 1 3.274 7.587A4.75 4.75 0 0 1 11.25 18H5a1 1 0 0 1-1-1V3Zm2.5 5.5v-4H11a2 2 0 1 1 0 4H6.5Zm0 2.5v4.5h4.75a2.25 2.25 0 0 0 0-4.5H6.5Z"
-                              clipRule="evenodd"/>
-                    </svg>
-
-                </MarkButton>
-                <MarkButton format="italic">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <path fillRule="evenodd"
-                              d="M8 2.75A.75.75 0 0 1 8.75 2h7.5a.75.75 0 0 1 0 1.5h-3.215l-4.483 13h2.698a.75.75 0 0 1 0 1.5h-7.5a.75.75 0 0 1 0-1.5h3.215l4.483-13H8.75A.75.75 0 0 1 8 2.75Z"
-                              clipRule="evenodd"/>
-                    </svg>
-                </MarkButton>
-                <MarkButton format="underline">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <path fillRule="evenodd"
-                              d="M4.75 2a.75.75 0 0 1 .75.75V9a4.5 4.5 0 1 0 9 0V2.75a.75.75 0 0 1 1.5 0V9A6 6 0 0 1 4 9V2.75A.75.75 0 0 1 4.75 2ZM2 17.25a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z"
-                              clipRule="evenodd"/>
-                    </svg>
-                </MarkButton>
-                <BlockButton format="heading-one">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <text textAnchor={'middle'} x={10} y={15} fontFamily={'sans-serif'} fontWeight={'semi-bold'}>H1</text>
-                    </svg>
-                </BlockButton>
-                <BlockButton format="heading-two">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <text textAnchor={'middle'} x={10} y={15} fontFamily={'sans-serif'} fontWeight={'semi-bold'}>H2</text>
-                    </svg>
-                </BlockButton>
-                <BlockButton format="heading-three">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <text textAnchor={'middle'} x={10} y={15} fontFamily={'sans-serif'} fontWeight={'semi-bold'}>H3</text>
-                    </svg>
-                </BlockButton>
-                <BlockButton format="heading-four">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <text textAnchor={'middle'} x={10} y={15} fontFamily={'sans-serif'} fontWeight={'semi-bold'}>H4</text>
-                    </svg>
-                </BlockButton>
-                <BlockButton format="heading-five">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <text textAnchor={'middle'} x={10} y={15} fontFamily={'sans-serif'} fontWeight={'semi-bold'}>H5</text>
-                    </svg>
-                </BlockButton>
-                <BlockButton format="paragraph">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <text textAnchor={'middle'} x={10} y={15} fontFamily={'sans-serif'} fontWeight={'normal'}>P</text>
-                    </svg>
-                </BlockButton>
-                <BlockButton format="block-quote">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <path transform={'translate(-2,0)'} strokeWidth={2} stroke={'currentColor'} d="M3 5 9 5v6Q9 13 3.75 15 Q7.25 12 5.5 10h-2.25Z" />
-                        <path transform={'translate(8,0)'} strokeWidth={2} stroke={'currentColor'} d="M3 5 9 5v6Q9 13 3.75 15 Q7.25 12 5.5 10h-2.25Z" />
-                    </svg>
-
-                </BlockButton>
-                <BlockButton format="numbered-list">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <path
-                            d="M3 1.25a.75.75 0 0 0 0 1.5h.25v2.5a.75.75 0 0 0 1.5 0V2A.75.75 0 0 0 4 1.25H3ZM2.97 8.654a3.5 3.5 0 0 1 1.524-.12.034.034 0 0 1-.012.012L2.415 9.579A.75.75 0 0 0 2 10.25v1c0 .414.336.75.75.75h2.5a.75.75 0 0 0 0-1.5H3.927l1.225-.613c.52-.26.848-.79.848-1.371 0-.647-.429-1.327-1.193-1.451a5.03 5.03 0 0 0-2.277.155.75.75 0 0 0 .44 1.434ZM7.75 3a.75.75 0 0 0 0 1.5h9.5a.75.75 0 0 0 0-1.5h-9.5ZM7.75 9.25a.75.75 0 0 0 0 1.5h9.5a.75.75 0 0 0 0-1.5h-9.5ZM7.75 15.5a.75.75 0 0 0 0 1.5h9.5a.75.75 0 0 0 0-1.5h-9.5ZM2.625 13.875a.75.75 0 0 0 0 1.5h1.5a.125.125 0 0 1 0 .25H3.5a.75.75 0 0 0 0 1.5h.625a.125.125 0 0 1 0 .25h-1.5a.75.75 0 0 0 0 1.5h1.5a1.625 1.625 0 0 0 1.37-2.5 1.625 1.625 0 0 0-1.37-2.5h-1.5Z"/>
-                    </svg>
-
-                </BlockButton>
-                <BlockButton format="bulleted-list">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <path fillRule="evenodd"
-                              d="M6 4.75A.75.75 0 0 1 6.75 4h10.5a.75.75 0 0 1 0 1.5H6.75A.75.75 0 0 1 6 4.75ZM6 10a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H6.75A.75.75 0 0 1 6 10Zm0 5.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H6.75a.75.75 0 0 1-.75-.75ZM1.99 4.75a1 1 0 0 1 1-1H3a1 1 0 0 1 1 1v.01a1 1 0 0 1-1 1h-.01a1 1 0 0 1-1-1v-.01ZM1.99 15.25a1 1 0 0 1 1-1H3a1 1 0 0 1 1 1v.01a1 1 0 0 1-1 1h-.01a1 1 0 0 1-1-1v-.01ZM1.99 10a1 1 0 0 1 1-1H3a1 1 0 0 1 1 1v.01a1 1 0 0 1-1 1h-.01a1 1 0 0 1-1-1V10Z"
-                              clipRule="evenodd"/>
-                    </svg>
-
-                </BlockButton>
-                <BlockButton format="left">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <path fillRule="evenodd"
-                              d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm0 10.5a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5a.75.75 0 0 1-.75-.75ZM2 10a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 10Z"
-                              clipRule="evenodd"/>
-                    </svg>
-
-                </BlockButton>
-                <BlockButton format="center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <path fillRule="evenodd"
-                              d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75ZM2 10a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 10Zm0 5.25a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z"
-                              clipRule="evenodd"/>
-                    </svg>
-                </BlockButton>
-                <BlockButton format="right">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-                        <path fillRule="evenodd"
-                              d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm7 10.5a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5a.75.75 0 0 1-.75-.75ZM2 10a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 10Z"
-                              clipRule="evenodd"/>
-                    </svg>
-
-                </BlockButton>
-            </Toolbar>
+        <Slate editor={editor} initialValue={value}>
             <Editable
                 renderElement={renderElement}
                 renderLeaf={renderLeaf}
+                readOnly
                 placeholder="Enter some rich text…"
                 spellCheck
-                // autoFocus
-                className={'w-[548px] max-w-[548px] text-wrap wrap-anywhere overflow-x-hidden border-1 border-black pl-3 h-[10em] overflow-y-auto'}
-                onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
-                    for (const hotkey in HOTKEYS) {
-                        if (isHotkey(hotkey, event as never)) {
-                            event.preventDefault()
-                            const mark = HOTKEYS[hotkey]
-                            toggleMark(editor, mark)
-                        }
-                    }
+                className={'w-[100%] text-wrap wrap-anywhere'}
+                style={{
+                    backgroundColor: areaColor,
+                    color: textColor,
                 }}
             />
         </Slate>
     )
 }
 
-export default TextEditor
+export default SlateTextEditor

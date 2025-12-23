@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Jost } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import StaticNavbar from "@/app/components/staticNavbar";
 
 const jost = Jost({subsets: ['latin'], weight:["100","200","300","400","500","600","700","800","900"]})
 
@@ -18,7 +19,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={jost.className}>
-        <Toaster />  
+        <Toaster />
+        <StaticNavbar />
         {children}
       </body>
     </html>

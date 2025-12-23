@@ -1,7 +1,7 @@
 "use client"
 import { useProjectContext } from "@/app/contexts/projectContext"
 import {ProjectImage, ProjectTag, Status} from "@/types";
-import TextEditor from "./TextEditor";
+import TextEditor from "./textEditor/TextEditor";
 import {Dispatch, FormEvent, MouseEventHandler, SetStateAction, useRef, useState, useReducer, ChangeEvent, useEffect} from "react";
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import toast from "react-hot-toast";
@@ -76,8 +76,6 @@ interface ProjectFormProps {
 
 const ProjectForm=({revalidateFunction}:ProjectFormProps)=>{
     const {project, setProject} = useProjectContext();
-    const [value, setValue] = useState<{}[]>([]);
-    const [loaded, setLoaded] = useState(false);
     const imageInputRef = useRef<HTMLInputElement>(null);
     const [state, dispatch] = useReducer(
         (state: any, newState: any) => ({...state, ...newState}),
@@ -93,13 +91,15 @@ const ProjectForm=({revalidateFunction}:ProjectFormProps)=>{
             major: false,
             status: Status.PreAlpha,
             tags:[],
-            shortcut:'default'
+            shortcut:'default',
+            description:'<p>No Description Provided Yet.</p>',
+            defaultDescription:'<p>No Description Provided Yet.</p>',
         }
     );
+    const setDescription=(description:string)=>{
+        dispatch({description: description})
+    }
     useEffect(()=>{
-        if(project){
-            setLoaded(true);
-        }
         dispatch({
             title:project?project.title:'',
             role:project?project.role:'',
@@ -113,19 +113,8 @@ const ProjectForm=({revalidateFunction}:ProjectFormProps)=>{
             status:project?project.status:Status.PreAlpha,
             tags:project?project.tags:[],
             shortcut:project?project.shortcut:'',
+            defaultDescription:project?project.description:'<p>No Description Provided Yet</p>',
         });
-        if (project){
-            setValue(project?.description!)
-        } else {
-            setValue([
-                {
-                    type: 'paragraph',
-                    children: [
-                        { text: "Default Value" }
-                    ],
-                }
-            ])
-        }
     }, [project]);
     const [open, setOpen] = useState(false)
     const tagValues = Object.values(ProjectTag);
@@ -138,8 +127,7 @@ const ProjectForm=({revalidateFunction}:ProjectFormProps)=>{
         if(project){
             formData.append("id", project._id as string)
         }
-        const valueObject = {description:value};
-        formData.append("description", JSON.stringify(valueObject));
+        formData.append("description", state.description);
         const images = []
         const l = project?project.images.length:0;
         for (let i = 0; i < l; i++) {
@@ -364,10 +352,13 @@ const ProjectForm=({revalidateFunction}:ProjectFormProps)=>{
                         ))
                         }
                     </div>
-                    <div className="bg-white mb-2 max-w-196.5 w-196.5">
-                        { loaded &&
-                            <TextEditor key={state.id} givenInitialValue={project?project.description as Descendant[]:'Default Value'} setValue={setValue} />
-                        }
+                    <div className="mb-2 max-w-[500px] w-[500px]">
+                        <TextEditor
+                            editorContent={state.defaultDescription}
+                            onChange={setDescription}
+                            editorBG={'bg-[#030712]'}
+                            defaultColor={'text-white'}
+                        />
                     </div>
                 </div>
                 <div className="flex flex-col justify-between">

@@ -1,13 +1,17 @@
+@import '../styles/_variables.scss';
+@import '../styles/_keyframe-animations.scss';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@plugin "flowbite-typography";
 
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 }
-
+@custom-variant data-selected (&[data-selected="true"]);
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -29,10 +33,19 @@ body {
 
 @layer base {
   h2 {
-    font-size: xx-large;
+    font-size: x-large;
   }
   h1 {
-    font-size: xx-large;
+    font-size: x-large;
+  }
+  h3 {
+    font-size: x-large;
+  }
+  h4 {
+    font-size: x-large;
+  }
+  h5 {
+    font-size: x-large;
   }
   input[type='text'],
   input[type='url']{
@@ -67,64 +80,65 @@ body {
   }
 }
 
-.headerDescription{
-  animation: headerDescriptionAnimation;
-  animation-iteration-count: 1;
-  animation-delay: 1s;
-  animation-duration: 6s;
-  margin-top: 0;
-  height: 0;
-  opacity: 0;
+.tagRow{
+  position: relative;
+  z-index: 4;
 }
 
-@keyframes headerDescriptionAnimation{
-  0%{
-    margin-top: 0;
-    height: 0;
-    opacity: 0;
-  }
-  3%{
-    height: auto;
-    margin-top: 16px;
-    opacity: 1;
-  }
-  97%{
-    height: auto;
-    margin-top: 16px;
-    opacity: 1;
-  }
-  100%{
-    margin-top: 0;
-    height: 0;
-    opacity: 0;
-  }
+.tagRow:before{
+  content: "Built with:";
+  position: absolute;
+  top: -1.5rem;
+  left:-2.5rem;
+  opacity: 50%;
+  z-index: 3;
+  width: max-content;
 }
 
-.hoverIndicator{
- animation:hoverIndicatorBlink;
- animation-duration: 10s;
- animation-iteration-count: infinite;
- animation-delay: 7s;
- opacity: 0;
+.linkRow{
+  position: relative;
+  z-index: 4;
 }
 
-@keyframes hoverIndicatorBlink{
-  0%{
-    opacity: 0.25;
-  }
-  10%{
-    opacity: 0.25;
-  }
-  15%{
-    opacity: 1;
-  }
-  35%{
-    opacity: 1;
-  }
-  40%{
-    opacity: 0.25;
-  }
-  100%{
-    opacity: 0.25;
-  }
+.linkRow:before{
+  content: "Link(s):";
+  position: absolute;
+  top: -1.5rem;
+  left:-2.5rem;
+  opacity: 50%;
+  z-index: 3;
 }
+
+.tiptap-button-icon,
+.tiptap-button-dropdown-small{
+  stroke: black;
+}
+.tiptap-button-text{
+  color: black;
+}
+
+blockquote {
+  background: #111;
+  border-left: 10px solid #555;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+  color: #ddd;
+}
+
+code {
+  color: #3c3;
+  background: #2f4f4f;
+  padding: .1rem .3rem .2rem;
+}
+/*blockquote:before {*/
+/*  color: #ccc;*/
+/*  content: '"';*/
+/*  font-size: 4em;*/
+/*  line-height: 0.1em;*/
+/*  margin-right: 0.25em;*/
+/*  vertical-align: -0.4em;*/
+/*}*/
+/*blockquote p {*/
+/*  display: inline;*/
+/*}*/

@@ -1,4 +1,5 @@
 import {Project} from "@/types";
+import Link from "next/link";
 
 interface MajorProjectContainerProps {
     project: Project;
@@ -14,6 +15,8 @@ const MajorProjectContainer = ({project}:MajorProjectContainerProps) => {
     }
 
     return (
+        <Link href={'/project/'+project.shortcut}>
+
         <div
             style={{
                 backgroundImage: `url(${bgImg})`
@@ -26,6 +29,7 @@ const MajorProjectContainer = ({project}:MajorProjectContainerProps) => {
                 <p>ss</p>
             </div>
         </div>
+        </Link>
     )
 }
 

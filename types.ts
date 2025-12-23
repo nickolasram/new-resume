@@ -32,13 +32,15 @@ export interface ProjectImage{
     position:number;
     hidden:boolean;
     bg:boolean;
+    description?:string;
+    alt?:string;
 }
 
 export interface Project{
     major: boolean;
     title:string;
     tags:string[];
-    description:{}[];
+    description:string;
     role:string;
     client:string;
     images:ProjectImage[];

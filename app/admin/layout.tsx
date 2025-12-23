@@ -1,6 +1,5 @@
 import { ReactNode } from "react"
 import { getSession } from "@/session/actions"
-import StaticNavbar from "@/app/components/staticNavbar";
 
 const Layout= async({
     children,
@@ -15,7 +14,6 @@ const Layout= async({
     const session = await getSession();
     return (
         <>
-            <StaticNavbar />
             <div className="max-w-[90dvw] mx-auto">
                 {children}
                 {session.isLoggedIn ?

@@ -38,10 +38,6 @@ export async function POST(req:NextRequest){
         } else {
             projectObject = new MongooseProject()
         }
-        let parsedDescription = JSON.parse(formData.get('description') as string).description
-        if (typeof parsedDescription[0] == 'string'){
-            parsedDescription = JSON.parse(parsedDescription)
-        }
         const statusFiltered = formData.get('status') == 'Pre-alpha'?'PreAlpha':formData.get('status');
         const inputtedProject:Project = {
             title: formData.get('title') != '' ? formData.get('title') as string : 'Default Name',
@@ -50,7 +46,7 @@ export async function POST(req:NextRequest){
             major: !!formData.get('major'),
             hidden: !!formData.get('hidden'),
             tags: formData.getAll('tags') ? formData.getAll('tags') as string[] : [],
-            description: parsedDescription as {}[],
+            description: formData.get('description') as string,
             order: formData.get("order") ? parseInt(formData.get("order") as string) : 99,
             images: formData.getAll('images[]').map(entry=>(
                     JSON.parse(entry as string)

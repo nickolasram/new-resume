@@ -28,7 +28,7 @@ const Page=()=>{
                         <ProjectPillar projectsPromise={projects} />
                     </Suspense>
                 </div>
-                <div className="grow pl-4">
+                <div className="grow pl-4" >
                     <ProjectForm revalidateFunction={revalidateFunction} />
                 </div>
             </ProjectProvider>

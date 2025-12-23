@@ -1,4 +1,5 @@
 import {Project} from "@/types";
+import Link from "next/link";
 
 interface MinorProjectContainerProps{
     project:Project;
@@ -13,6 +14,7 @@ const MinorProjectContainer=({project}:MinorProjectContainerProps)=>{
         bgImg = image?.url
     }
     return(
+        <Link href={'/project/'+project.shortcut}>
         <div
             className="grow bg-center bg-cover group [box-shadow:inset_0_0_5px_10px_#000] cursor-pointer transition-all hover:[box-shadow:inset_0_0_5px_#000] w-full"
             style={{
@@ -23,6 +25,7 @@ const MinorProjectContainer=({project}:MinorProjectContainerProps)=>{
                 <h2>{project.title}</h2>
             </div>
         </div>
+        </Link>
     )
 }
 

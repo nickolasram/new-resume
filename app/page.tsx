@@ -5,7 +5,6 @@ import MinorProjectContainer from "./components/MinorProjectContainer";
 import {Project} from "@/models/project";
 import {Project as ProjectType} from "@/types";
 import {Suspense} from "react";
-import StaticNavbar from "@/app/components/staticNavbar";
 
 export default async function Home() {
     const projects = await Project.find({}, {__v: 0}).lean().then(e => {
@@ -20,7 +19,6 @@ export default async function Home() {
     const minorProjects = projects.filter(obj => (!obj.major))
     return (
         <main className="h-screen">
-            <StaticNavbar />
             <p className="text-xl text-center px-[10%] transition-all">North Seattle College, BAS in Application Development.
                 Thank you for visiting this site where you&apos;ll find information about my background, projects, and goals as a developer.</p>
             <Suspense fallback={<p>Loading...</p>}>

@@ -4,14 +4,7 @@ const projectSchema = new mongoose.Schema({
     major: {type: Boolean, required: true},
     title: {type: String, required: true, unique: true},
     tags: {type: [String], required: true, default: []},
-    description: {type: [mongoose.Schema.Types.Mixed], required: true, default: [
-        {
-            type: 'paragraph',
-            children: [
-                { text: "Default Text" }
-            ],
-        }
-    ]},
+    description: {type: String, required: true, default: '<p>No description yet</p>'},
     role: {type: String, required: true, default: 'Developer'},
     client: {type: String, required: true, default: 'Self'},
     images: {type: [mongoose.Schema.Types.Mixed], required: true, default: [{url:process.env.NEXT_PUBLIC_AWS_DEFAULT,hidden:false,bg:true,position:1}]},
